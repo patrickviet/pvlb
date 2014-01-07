@@ -1,0 +1,46 @@
+# this config needs haproxy-1.1.28 or haproxy-1.2.1
+
+global
+	log 127.0.0.1	local0
+	log 127.0.0.1	local1 notice
+	#log loghost	local0 info
+	maxconn 4096
+	#chroot /usr/share/haproxy
+	user haproxy
+	group haproxy
+	daemon
+	#debug
+	#quiet
+
+defaults
+	log	global
+	mode	http
+	option	httplog
+	option	dontlognull
+	retries	3
+	option redispatch
+	maxconn	2000
+	contimeout	5000
+	clitimeout	50000
+	srvtimeout	50000
+
+listen admin_page :<%= node['pvlb']['starting_port'] %>
+        mode http
+        stats enable
+        stats realm Haproxy
+        stats uri /my_stats
+        stats auth admin:<%= node['pvlb']['statspwd'] %>
+
+<% node['pvlb']['lb_groups'].each do |lb_group_name, lbservers| %>
+
+listen <%= lb_group_name %> 127.0.0.1:<%= node['pvlb']['lb_groups_to_port'][lb_group_name] %>
+        mode http
+        balance roundrobin
+        option httpchk
+        cookie SERVERID insert indirect
+<%   lbservers.each do |servername|
+	      srvdata = node['pvlb']['lb_servers'][servername]
+%>
+        server <%= servername %> <%= srvdata['ipaddr'] %>:80 cookie <%= srvdata['hexdigest'] %> weight <%= srvdata['weight'] %> check
+<%   end %>
+<% end %>
