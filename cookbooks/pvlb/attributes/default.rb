@@ -1,45 +1,30 @@
 
 # LIST OF SERVER NAME TO IP ADDRESS MAPPINGS + WEIGHT (RELATIVE POWER)
 node.default['pvlb']['lb_servers'] = {
-  'bob-web1' => {
-    'ipaddr' => '10.10.10.1',
+  'web1' => {
+    'ipaddr' => '172.31.38.248',
     'weight' => 10,
   },
-  'bob-web2' => {
-    'ipaddr' => '10.10.10.2',
-    'weight' => 20,
-  },
-  'henri-web1' => {
-    'ipaddr' => '10.10.10.3',
-    'weight' => 10,
-  },
-  'henri-web2' => {
-    'ipaddr' => '10.10.10.4',
+  'web2' => {
+    'ipaddr' => '172.31.38.250',
     'weight' => 10,
   },
 }
 
 # LIST OF SERVER GROUPS
 node.default['pvlb']['lb_groups'] = {
-  'bob' => [
-    'bob-web1',
-    'bob-web2'
+  'testpvlb' => [
+    'web1',
+    'web2'
   ],
-  'henri' => [
-    'henri-web1',
-    'henri-web2',
-  ],  
 }
 
 # MAPPING: WHICH VHOST GOES TO WHICH GROUP
 node.default['pvlb']['lb_vhosts'] = {
-  'www.bob.dnspow.com'        => 'bob',
-  'www.bobby.dnspow.com'      => 'bob',
-  'www.henri.dnspow.com'      => 'henri',
-  'www.superhenri.dnspow.com' => 'henri',
+  'www.testpvlb.dnspow.com'        => 'testpvlb',
 }
 
-node.default['pvlb']['statspwd'] = 'mypwd'
+node.default['pvlb']['statspwd'] = 'supersecure'
 
 ## ----------------------------------------------------------------------------
 #### GENERATE PORT TO NAME MAPPING
