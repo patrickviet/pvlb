@@ -1,4 +1,3 @@
-
 # LIST OF SERVER NAME TO IP ADDRESS MAPPINGS + WEIGHT (RELATIVE POWER)
 node.default['pvlb']['lb_servers'] = {
   'web1' => {
@@ -21,10 +20,14 @@ node.default['pvlb']['lb_groups'] = {
 
 # MAPPING: WHICH VHOST GOES TO WHICH GROUP
 node.default['pvlb']['lb_vhosts'] = {
-  'www.testpvlb.dnspow.com'        => 'testpvlb',
+  'testpvlb' => [
+    'testpvlb.dnspow.com',
+    'www.testpvlb.dnspow.com',
+  ],
 }
 
 node.default['pvlb']['statspwd'] = 'supersecure'
+node.default['pvlb']['haproxy_extra_raw_config'] = ''
 
 ## ----------------------------------------------------------------------------
 #### GENERATE PORT TO NAME MAPPING
@@ -33,14 +36,12 @@ node.default['pvlb']['statspwd'] = 'supersecure'
 node.default['pvlb']['starting_port'] = 12000
 current_port = node['pvlb']['starting_port']
 
-node.default['pvlb']['lb_groups_to_port'] = {}
+node.default['pvlb']['lb_name_to_port'] = {}
 
-node['pvlb']['lb_vhosts'].each do |vhost,name|
-  unless node['pvlb']['lb_groups_to_port'].has_key? name
-    # this means that the port 1 is reserved for the stats.
-    current_port += 1
-    node.default['pvlb']['lb_groups_to_port'][name] = current_port
-  end
+node['pvlb']['lb_vhosts'].each do |name,vhosts|
+  # first port is for stats (since we do +1 immediately)
+  current_port += 1
+  node.default['pvlb']['lb_name_to_port'][name] = current_port
 end
 
 # Compute md5 hash for each server (for serverid)
@@ -49,19 +50,6 @@ require 'digest/md5'
 node['pvlb']['lb_servers'].keys.each do |servername|
   node.default['pvlb']['lb_servers'][servername]['hexdigest'] =
     Digest::MD5.hexdigest(servername)
-end
-
-# Now create a list of port to vhost correspondances
-node.default['pvlb']['lb_ports'] = {}
-
-node.default['pvlb']['lb_vhosts'].each do |vhost_name,lb_group_name|
-  port = node['pvlb']['lb_groups_to_port'][lb_group_name]
-
-  if node['pvlb']['lb_ports'].has_key? port
-    node.default['pvlb']['lb_ports'][port].push vhost_name
-  else
-    node.default['pvlb']['lb_ports'][port] = [vhost_name]
-  end
 end
 
 # Now we will have:

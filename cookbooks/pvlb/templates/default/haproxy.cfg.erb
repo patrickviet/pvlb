@@ -33,7 +33,7 @@ listen admin_page :<%= node['pvlb']['starting_port'] %>
 
 <% node['pvlb']['lb_groups'].each do |lb_group_name, lbservers| %>
 
-listen <%= lb_group_name %> 127.0.0.1:<%= node['pvlb']['lb_groups_to_port'][lb_group_name] %>
+listen <%= lb_group_name %> 127.0.0.1:<%= node['pvlb']['lb_name_to_port'][lb_group_name] %>
         mode http
         balance roundrobin
         option httpchk
@@ -44,3 +44,5 @@ listen <%= lb_group_name %> 127.0.0.1:<%= node['pvlb']['lb_groups_to_port'][lb_g
         server <%= servername %> <%= srvdata['ipaddr'] %>:80 cookie <%= srvdata['hexdigest'] %> weight <%= srvdata['weight'] %> check
 <%   end %>
 <% end %>
+
+<%= node['pvlb']['haproxy_extra_raw_config'] %>
