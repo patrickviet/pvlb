@@ -61,12 +61,6 @@ node.default['pvlb']['haproxy_extra_raw_config'] = ''
 # you are doing
 # -----------------------------------------------------------------------------
 
-# The NGINX html default path is:
-node.default['pvlb']['nginx_html'] = '/var/www' # on ubuntu/debian
-if node.platform_family == 'rhel'
-  node.default['pvlb']['nginx_html'] = '/usr/share/nginx/html'
-end
-
 # We assume that the ports from 12000 onwards are open
 node.default['pvlb']['starting_port'] = 12000
 current_port = node['pvlb']['starting_port']

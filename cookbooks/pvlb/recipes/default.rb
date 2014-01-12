@@ -3,20 +3,20 @@ package 'nginx'
 package 'haproxy'
 
 # Some default files/directories
-directory node['pvlb']['nginx_html'] do
+directory '/var/pvlb/html' do
   mode '0755'
   owner 'root'
   group 'root'
   recursive true
 end
 
-cookbook_file node['pvlb']['nginx_html'] + '/index.html' do
+cookbook_file '/var/pvlb/html/index.html' do
   mode '0644'
   owner 'root'
   group 'root'
 end
 
-file node['pvlb']['nginx_html'] + '/health.txt' do
+file '/var/pvlb/html/health.txt' do
   mode '0644'
   owner 'root'
   group 'root'
