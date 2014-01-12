@@ -24,12 +24,13 @@ defaults
 	clitimeout	50000
 	srvtimeout	50000
 
-listen admin_page :<%= node['pvlb']['starting_port'] %>
+listen admin 127.0.0.1:<%= node['pvlb']['starting_port'] %>
         mode http
         stats enable
         stats realm Haproxy
-        stats uri /my_stats
+        stats uri /stats
         stats auth admin:<%= node['pvlb']['statspwd'] %>
+        server local_nginx 127.0.0.1:80
 
 <% node['pvlb']['lb_groups'].each do |lb_group_name, lbservers| %>
 

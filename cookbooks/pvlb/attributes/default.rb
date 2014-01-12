@@ -1,36 +1,71 @@
+# -----------------------------------------------------------------------------
+# PVLB Configuration
+# Please edit starting here
+# note that you can also override this within your server role parameters
+# if you prefer
+# -----------------------------------------------------------------------------
+
 # LIST OF SERVER NAME TO IP ADDRESS MAPPINGS + WEIGHT (RELATIVE POWER)
 node.default['pvlb']['lb_servers'] = {
-  'web1' => {
-    'ipaddr' => '172.31.38.248',
+  'web1site1' => {
+    'ipaddr' => '10.0.0.1',
     'weight' => 10,
   },
-  'web2' => {
-    'ipaddr' => '172.31.38.250',
+  'web2site1' => {
+    'ipaddr' => '10.0.0.2',
+    'weight' => 20,
+  },
+  'web1site2' => {
+    'ipaddr' => '10.0.0.3',
+    'weight' => 10,
+  },
+  'web2site2' => {
+    'ipaddr' => '10.0.0.4',
     'weight' => 10,
   },
 }
 
 # LIST OF SERVER GROUPS
 node.default['pvlb']['lb_groups'] = {
-  'testpvlb' => [
-    'web1',
-    'web2'
+  'site1' => [
+    'web1site1',
+    'web2site2'
+  ],
+  'site2' => [
+    'web1site1',
+    'web2site2'
   ],
 }
 
 # MAPPING: WHICH VHOST GOES TO WHICH GROUP
 node.default['pvlb']['lb_vhosts'] = {
-  'testpvlb' => [
-    'testpvlb.dnspow.com',
-    'www.testpvlb.dnspow.com',
+  'site1' => [
+    'firstsite.com',
+    'www.firstsite.com',
+    'subdomain.firstsite.com',
+    'www.anotheralias.com'
+  ],
+  'site2' => [
+    'secondsite.com',
+    'www.secondsite.com',
   ],
 }
 
 node.default['pvlb']['statspwd'] = 'supersecure'
 node.default['pvlb']['haproxy_extra_raw_config'] = ''
 
-## ----------------------------------------------------------------------------
-#### GENERATE PORT TO NAME MAPPING
+
+# -----------------------------------------------------------------------------
+# Editing of configuration ends here
+# Please don't touch to anything beyond here unless you know exactly what
+# you are doing
+# -----------------------------------------------------------------------------
+
+# The NGINX html default path is:
+node.default['pvlb']['nginx_html'] = '/var/www' # on ubuntu/debian
+if node.platform_family == 'rhel'
+  node.default['pvlb']['nginx_html'] = '/usr/share/nginx/html'
+end
 
 # We assume that the ports from 12000 onwards are open
 node.default['pvlb']['starting_port'] = 12000

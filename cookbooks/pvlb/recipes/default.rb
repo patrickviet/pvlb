@@ -2,8 +2,27 @@
 package 'nginx'
 package 'haproxy'
 
-#log node.pvlb
-#return
+# Some default files/directories
+directory node['pvlb']['nginx_html'] do
+  mode '0755'
+  owner 'root'
+  group 'root'
+  recursive true
+end
+
+cookbook_file node['pvlb']['nginx_html'] + '/index.html' do
+  mode '0644'
+  owner 'root'
+  group 'root'
+end
+
+file node['pvlb']['nginx_html'] + '/health.txt' do
+  mode '0644'
+  owner 'root'
+  group 'root'
+  content "OK\n"
+end
+
 # NGINX CONFIG
 template '/etc/nginx/nginx.conf' do
   mode '0644'
