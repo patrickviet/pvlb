@@ -82,7 +82,7 @@ server {
 	listen 80;
 	server_name special_health_check_vhost;
 	location / {
-		root /var/pvlb/html>;
+		root /var/pvlb/html;
 		try_files $uri $uri/ /health.txt;
 	}
 }
