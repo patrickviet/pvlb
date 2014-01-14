@@ -3,6 +3,10 @@ PVLB
 
 A high performance server load balancing solution
 
+[Youtube presentation video: http://www.youtube.com/watch?v=BK3duo5zAJY](http://www.youtube.com/watch?v=BK3duo5zAJY)
+
+The video contains some slides and a full 30min howto (format: screencast).
+
 PVLB uses open source software:
 - Linux (Ubuntu or Redhat both work)
 - Nginx (as an HTTP proxy - to redirect vhosts)
