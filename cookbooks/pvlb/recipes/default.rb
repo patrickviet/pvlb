@@ -52,10 +52,12 @@ end
 
 
 service 'nginx' do
+  supports :reload => true
   action :start
 end
 
 service 'haproxy' do
+  supports :reload => true
   action :start
 end
 
