@@ -28,7 +28,7 @@ template '/etc/nginx/nginx.conf' do
   mode '0644'
   owner 'root'
   group 'root'
-  notifies :restart, 'service[nginx]'
+  notifies :reload 'service[nginx]'
 end
 
 # HAPROXY CONFIG
@@ -39,7 +39,7 @@ file '/etc/default/haproxy' do
   owner 'root'
   group 'root'
   content "ENABLED=1\n"
-  notifies :restart, 'service[haproxy]'
+  notifies :reload, 'service[haproxy]'
 end
 
 # The actual config - sourced from
@@ -47,7 +47,7 @@ template '/etc/haproxy/haproxy.cfg' do
   mode '0644'
   owner 'root'
   group 'root'
-  notifies :restart, 'service[haproxy]'
+  notifies :reload, 'service[haproxy]'
 end
 
 
